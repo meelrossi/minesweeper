@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "ace-css": "1.1",
+    "css-loader": "^0.28.1",
+    "elm-webpack-loader": "^4.3.1",
+    "file-loader": "^0.11.1",
+    "font-awesome": "4",
+    "style-loader": "^0.17.0",
+    "url-loader": "^0.5.8",
+    "webpack": "^2.5.1",
+    "webpack-dev-server": "^2.4.5"
+  },
+  "scripts": {
+    "build": "webpack",
+    "client": "webpack-dev-server --port 3000"
+  }
+}
