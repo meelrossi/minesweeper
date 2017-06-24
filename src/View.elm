@@ -22,13 +22,13 @@ page model =
             Menu.view
 
         EasyRoute ->
-            Level.Easy.view
+            Level.Easy.view model
 
         MediumRoute ->
-            Level.Medium.view
+            Level.Medium.view model
 
         DifficultRoute ->
-            Level.Difficult.view
+            Level.Difficult.view model
 
         NotFoundRoute ->
             notFoundView
