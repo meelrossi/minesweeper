@@ -43,3 +43,7 @@ lightgrey =
 
 red =
     "#FF0000"
+
+
+grey =
+    "#808080"

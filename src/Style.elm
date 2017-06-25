@@ -2,16 +2,31 @@ module Style exposing (..)
 
 import CustomColors exposing (..)
 import Html.Attributes exposing (..)
+import Html exposing (..)
+import Tile exposing (..)
 
 
-tile =
+tile : Tile -> Html.Attribute msg
+tile t =
     style
-        [ ( "width", "30px" )
-        , ( "height", "30px" )
-        , ( "background-color", CustomColors.brown )
+        [ ( "width", "40px" )
+        , ( "height", "40px" )
+        , ( "background-color", (getTileColor t) )
+        , ( "text-align", "center" )
         ]
 
 
+getTileColor : Tile -> String
+getTileColor t =
+    case t.opened of
+        True ->
+            CustomColors.lightgrey
+
+        False ->
+            CustomColors.grey
+
+
+getColor : Int -> String
 getColor n =
     case n of
         1 ->
@@ -45,6 +60,7 @@ getColor n =
             CustomColors.white
 
 
+number : Int -> Html.Attribute msg
 number n =
     style
         [ ( "font-size", "18px" )
@@ -55,6 +71,16 @@ number n =
         ]
 
 
+tileImage : Html.Attribute msg
+tileImage =
+    style
+        [ ( "font-size", "18px" )
+        , ( "margin", "0" )
+        , ( "text-align", "center" )
+        ]
+
+
+minefield : Html.Attribute msg
 minefield =
     style
         [ ( "display", "flex" )
@@ -62,6 +88,7 @@ minefield =
         ]
 
 
+container : Html.Attribute msg
 container =
     style
         [ ( "display", "flex" )
@@ -71,10 +98,11 @@ container =
         ]
 
 
+mainMenu : Html.Attribute msg
 mainMenu =
     style
         [ ( "padding", "10px" )
-        , ( "width", "1000px" )
+        , ( "width", "600px" )
         , ( "text-align", "center" )
         , ( "font-family", "'Dosis', sans-serif" )
         , ( "background-color", CustomColors.brown )
@@ -82,10 +110,11 @@ mainMenu =
         ]
 
 
+menuButton : Html.Attribute msg
 menuButton =
     style
         [ ( "margin", "0 auto 30px auto" )
-        , ( "width", "500px" )
+        , ( "width", "300px" )
         , ( "padding", "15px" )
         , ( "border-radius", "10px" )
         , ( "background", CustomColors.pink )
@@ -96,19 +125,75 @@ menuButton =
         ]
 
 
+menuTitle : Html.Attribute msg
 menuTitle =
     style
-        [ ( "font-size", "120px" )
-        , ( "display", "block" )
+        [ ( "display", "flex" )
         , ( "color", "white" )
         , ( "margin", "0 auto" )
-        , ( "padding-bottom", "30px" )
+        , ( "align-items", "center" )
+        , ( "justify-content", "center" )
+        , ( "padding", "20px" )
         ]
 
 
+titleText : Html.Attribute msg
+titleText =
+    style
+        [ ( "font-size", "50px" )
+        , ( "margin", "0" )
+        ]
+
+
+levelTitle : Html.Attribute msg
 levelTitle =
     style
         [ ( "font-size", "60px" )
         , ( "color", CustomColors.pink )
         , ( "margin", "20px" )
+        , ( "text-align", "center" )
         ]
+
+
+mineImage : Html.Attribute msg
+mineImage =
+    style
+        [ ( "width", "70px" )
+        , ( "height", "70px" )
+        , ( "margin-left", "10px" )
+        ]
+
+
+bombImage : Html.Attribute msg
+bombImage =
+    style
+        [ ( "width", "30px" )
+        , ( "height", "30px" )
+        ]
+
+
+flagImage : Html.Attribute msg
+flagImage =
+    style
+        [ ( "width", "20px" )
+        , ( "height", "20px" )
+        ]
+
+
+lost : Bool -> Html.Attribute msg
+lost exploded =
+    case exploded of
+        False ->
+            style
+                [ ( "font-size", "20px" )
+                , ( "text-align", "center" )
+                , ( "color", CustomColors.brown )
+                , ( "visibility", "hidden" )
+                ]
+
+        True ->
+            style
+                [ ( "font-size", "20px" )
+                , ( "text-align", "center" )
+                , ( "color", CustomColors.brown )
+                ]

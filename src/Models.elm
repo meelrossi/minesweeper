@@ -8,6 +8,7 @@ type alias Model =
     { route : Route
     , minefield : Minefield
     , seed : Seed
+    , exploded : Bool
     }
 
 
@@ -20,6 +21,7 @@ initialModel route =
         { route = route
         , minefield = minefield
         , seed = seed
+        , exploded = False
         }
 
 
