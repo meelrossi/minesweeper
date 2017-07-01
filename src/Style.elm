@@ -180,6 +180,14 @@ flagImage =
         ]
 
 
+levelLink : Html.Attribute msg
+levelLink =
+    style
+        [ ( "font-size", "16px" )
+        , ( "margin", "10px" )
+        ]
+
+
 lost : Bool -> Html.Attribute msg
 lost exploded =
     case exploded of

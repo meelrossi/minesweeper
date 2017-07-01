@@ -6,6 +6,9 @@ import Routing exposing (parseLocation)
 import Minefield exposing (..)
 import Matrix exposing (..)
 import Tile exposing (..)
+import Time exposing (..)
+import Task exposing (..)
+import Random.Pcg exposing (..)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -18,9 +21,6 @@ update msg model =
 
                 ( newModel, newSeed ) =
                     case newRoute of
-                        MenuRoute ->
-                            Minefield.new 0 0 0 model.seed
-
                         EasyRoute ->
                             Minefield.new 10 10 20 model.seed
 
@@ -30,7 +30,7 @@ update msg model =
                         DifficultRoute ->
                             Minefield.new 40 40 70 model.seed
 
-                        NotFoundRoute ->
+                        _ ->
                             Minefield.new 0 0 0 model.seed
             in
                 ( { model | minefield = newModel, seed = newSeed, route = newRoute }, Cmd.none )
@@ -73,3 +73,27 @@ update msg model =
                     Matrix.set tile.location markTile model.minefield
             in
                 ( { model | minefield = newMinefield }, Cmd.none )
+
+        NewTime time ->
+            let
+                ns =
+                    initialSeed (round time)
+
+                ( newMinefield, newSeed ) =
+                    case model.route of
+                        EasyRoute ->
+                            Minefield.new 10 10 20 ns
+
+                        MediumRoute ->
+                            Minefield.new 25 25 30 ns
+
+                        DifficultRoute ->
+                            Minefield.new 40 40 70 ns
+
+                        _ ->
+                            Minefield.new 0 0 0 ns
+            in
+                ( { model | seed = newSeed, minefield = newMinefield }, Cmd.none )
+
+        Refresh ->
+            ( model, Task.perform NewTime Time.now )

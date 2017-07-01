@@ -16,7 +16,7 @@ initialModel : Route -> Model
 initialModel route =
     let
         ( minefield, seed ) =
-            Minefield.new 10 10 20 (initialSeed 324234)
+            Minefield.new 0 0 0 (initialSeed 324234)
     in
         { route = route
         , minefield = minefield

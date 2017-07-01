@@ -6,6 +6,8 @@ import Navigation exposing (Location)
 import Routing
 import Update exposing (update)
 import Models exposing (..)
+import Time exposing (..)
+import Task exposing (..)
 
 
 init : Location -> ( Model, Cmd Msg )
@@ -14,7 +16,7 @@ init location =
         currentRoute =
             Routing.parseLocation location
     in
-        ( initialModel currentRoute, Cmd.none )
+        ( initialModel currentRoute, Task.perform NewTime Time.now )
 
 
 
