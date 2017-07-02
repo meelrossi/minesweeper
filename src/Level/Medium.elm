@@ -7,9 +7,7 @@ import Minefield exposing (..)
 import Models exposing (..)
 import Routing exposing (..)
 import Html.Attributes exposing (src, href)
-import Time exposing (..)
-import Task exposing (..)
-import Html.Events exposing (onClick, onWithOptions)
+import Html.Events exposing (onClick)
 
 
 view : Model -> Html Msg
@@ -17,6 +15,7 @@ view model =
     div [ Style.levelTitle ]
         [ text "Medium"
         , p [ Style.lost model.exploded ] [ text "PERDISTE PERDISTE NO HAY NADIE PEOR QUE VOS" ]
+        , p [ Style.lost model.success ] [ text "HAS GANADO" ]
         , Minefield.getHTMLMinefield model.minefield
         , div []
             [ a [ Style.levelLink, href menuPath ]

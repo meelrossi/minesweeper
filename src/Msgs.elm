@@ -1,7 +1,7 @@
 module Msgs exposing (..)
 
 import Navigation exposing (Location)
-import Tile exposing (..)
+import Models exposing (Tile)
 import Time exposing (..)
 
 

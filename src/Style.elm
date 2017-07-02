@@ -3,7 +3,7 @@ module Style exposing (..)
 import CustomColors exposing (..)
 import Html.Attributes exposing (..)
 import Html exposing (..)
-import Tile exposing (..)
+import Models exposing (..)
 
 
 tile : Tile -> Html.Attribute msg
@@ -83,7 +83,7 @@ tileImage =
 minefield : Html.Attribute msg
 minefield =
     style
-        [ ( "display", "flex" )
+        [ ( "display", "inline-block" )
         , ( "justify-content", "center" )
         ]
 
@@ -185,6 +185,15 @@ levelLink =
     style
         [ ( "font-size", "16px" )
         , ( "margin", "10px" )
+        ]
+
+
+bombsText : Html.Attribute msg
+bombsText =
+    style
+        [ ( "font-size", "25px" )
+        , ( "text-align", "right" )
+        , ( "display", "block" )
         ]
 
 

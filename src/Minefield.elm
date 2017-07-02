@@ -1,7 +1,7 @@
 module Minefield exposing (..)
 
 import Matrix exposing (..)
-import Tile exposing (..)
+import Models exposing (..)
 import Random.Pcg exposing (..)
 import Msgs exposing (..)
 import Html exposing (..)
@@ -11,8 +11,39 @@ import Html.Events exposing (onClick, onWithOptions)
 import Json.Decode as Json
 
 
-type alias Minefield =
-    Matrix Tile
+getMinefield : Route -> ( Minefield, Seed )
+getMinefield route =
+    case route of
+        EasyRoute ->
+            new 8 8 10 (initialSeed 324234)
+
+        MediumRoute ->
+            new 16 16 40 (initialSeed 324234)
+
+        DifficultRoute ->
+            new 16 30 99 (initialSeed 324234)
+
+        _ ->
+            new 0 0 0 (initialSeed 0)
+
+
+new : Int -> Int -> Int -> Seed -> ( Minefield, Seed )
+new width height bombs seed0 =
+    let
+        ( positions, seed ) =
+            getRandomPositions width height bombs seed0 []
+
+        matrix =
+            Matrix.matrix height
+                width
+                (\location ->
+                    if List.member location positions then
+                        Tile Bomb 9 False location False
+                    else
+                        Tile Number (List.foldr (+) 0 (List.map (\x -> x positions) (List.map isMine (getNeighbors location)))) False location False
+                )
+    in
+        ( { field = matrix, bombs = bombs, marks = 0, width = width, height = height }, seed )
 
 
 onRightClick : a -> Attribute a
@@ -40,25 +71,6 @@ getRandomPositions width height bombs seed positions =
                 getRandomPositions width height bombs seed1 (loc :: positions)
 
 
-new : Int -> Int -> Int -> Seed -> ( Minefield, Seed )
-new width height bombs seed0 =
-    let
-        ( positions, seed ) =
-            getRandomPositions width height bombs seed0 []
-
-        matrix =
-            Matrix.matrix height
-                width
-                (\location ->
-                    if List.member location positions then
-                        Tile Bomb 9 False location False
-                    else
-                        Tile Number (List.foldr (+) 0 (List.map (\x -> x positions) (List.map isMine (getNeighbors location)))) False location False
-                )
-    in
-        ( matrix, seed )
-
-
 isMine : Location -> List Location -> Int
 isMine ( x, y ) positions =
     if List.member ( x, y ) positions then
@@ -67,27 +79,25 @@ isMine ( x, y ) positions =
         0
 
 
-getNeighbors : Location -> List Location
-getNeighbors ( x, y ) =
-    [ ( x - 1, y + 1 ), ( x, y + 1 ), ( x + 1, y + 1 ), ( x - 1, y ), ( x + 1, y ), ( x - 1, y - 1 ), ( x, y - 1 ), ( x + 1, y - 1 ) ]
-
-
 getHTMLMinefield : Minefield -> Html Msg
 getHTMLMinefield minefield =
     div [ Style.minefield ]
-        [ table []
-            (List.map
-                (\row ->
-                    tr []
-                        (List.map
-                            (\column ->
-                                td [ (Style.tile column), onClick (Msgs.OpenTile column), onRightClick (Msgs.MarkTile column) ] (getColumnTile column)
+        [ p [ Style.bombsText ] [ text (String.concat [ toString (minefield.marks), "/", toString (minefield.bombs) ]), img [ Style.bombImage, src "src/resources/bomb.png" ] [] ]
+        , div []
+            [ table []
+                (List.map
+                    (\row ->
+                        tr []
+                            (List.map
+                                (\column ->
+                                    td [ (Style.tile column), onClick (Msgs.OpenTile column), onRightClick (Msgs.MarkTile column) ] (getColumnTile column)
+                                )
+                                row
                             )
-                            row
-                        )
+                    )
+                    (Matrix.toList minefield.field)
                 )
-                (Matrix.toList minefield)
-            )
+            ]
         ]
 
 
@@ -119,7 +129,12 @@ getColumnTile tile =
                     []
 
 
-checkAndOpenNeighbors : Minefield -> Tile -> ( Minefield, Bool )
+getNeighbors : Location -> List Location
+getNeighbors ( x, y ) =
+    [ ( x - 1, y + 1 ), ( x, y + 1 ), ( x + 1, y + 1 ), ( x - 1, y ), ( x + 1, y ), ( x - 1, y - 1 ), ( x, y - 1 ), ( x + 1, y - 1 ) ]
+
+
+checkAndOpenNeighbors : Matrix Tile -> Tile -> ( Matrix Tile, Bool )
 checkAndOpenNeighbors minefield tile =
     let
         neighbors =
@@ -155,7 +170,7 @@ checkAndOpenNeighbors minefield tile =
                 ( minefield, False )
 
 
-openNeighbors : Minefield -> List Location -> ( Minefield, Bool )
+openNeighbors : Matrix Tile -> List Location -> ( Matrix Tile, Bool )
 openNeighbors field neig =
     case neig of
         [] ->
@@ -191,7 +206,7 @@ openNeighbors field neig =
                         ( field, False )
 
 
-clearNeighbors : Minefield -> List Location -> Minefield
+clearNeighbors : Matrix Tile -> List Location -> Matrix Tile
 clearNeighbors field tiles =
     case tiles of
         [] ->

@@ -8,6 +8,7 @@ import Update exposing (update)
 import Models exposing (..)
 import Time exposing (..)
 import Task exposing (..)
+import Minefield exposing (getMinefield)
 
 
 init : Location -> ( Model, Cmd Msg )
@@ -17,6 +18,20 @@ init location =
             Routing.parseLocation location
     in
         ( initialModel currentRoute, Task.perform NewTime Time.now )
+
+
+initialModel : Route -> Model
+initialModel route =
+    let
+        ( minefield, seed ) =
+            getMinefield route
+    in
+        { route = route
+        , minefield = minefield
+        , seed = seed
+        , exploded = False
+        , success = False
+        }
 
 
 

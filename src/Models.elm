@@ -1,7 +1,7 @@
 module Models exposing (..)
 
-import Minefield exposing (..)
-import Random.Pcg exposing (..)
+import Matrix exposing (..)
+import Random.Pcg exposing (Seed)
 
 
 type alias Model =
@@ -9,20 +9,31 @@ type alias Model =
     , minefield : Minefield
     , seed : Seed
     , exploded : Bool
+    , success : Bool
     }
 
 
-initialModel : Route -> Model
-initialModel route =
-    let
-        ( minefield, seed ) =
-            Minefield.new 0 0 0 (initialSeed 324234)
-    in
-        { route = route
-        , minefield = minefield
-        , seed = seed
-        , exploded = False
-        }
+type alias Minefield =
+    { field : Matrix Tile
+    , bombs : Int
+    , marks : Int
+    , width : Int
+    , height : Int
+    }
+
+
+type alias Tile =
+    { tp : TileType
+    , value : Int
+    , opened : Bool
+    , location : Location
+    , marked : Bool
+    }
+
+
+type TileType
+    = Number
+    | Bomb
 
 
 type Route
