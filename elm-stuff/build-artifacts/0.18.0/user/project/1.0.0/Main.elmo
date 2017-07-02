@@ -1,11 +1,17 @@
 var _user$project$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
+var _user$project$Main$initialModel = function (route) {
+	var _p0 = _user$project$Minefield$getMinefield(route);
+	var minefield = _p0._0;
+	var seed = _p0._1;
+	return {route: route, minefield: minefield, seed: seed, exploded: false, success: false};
+};
 var _user$project$Main$init = function (location) {
 	var currentRoute = _user$project$Routing$parseLocation(location);
 	return {
 		ctor: '_Tuple2',
-		_0: _user$project$Models$initialModel(currentRoute),
+		_0: _user$project$Main$initialModel(currentRoute),
 		_1: A2(_elm_lang$core$Task$perform, _user$project$Msgs$NewTime, _elm_lang$core$Time$now)
 	};
 };
