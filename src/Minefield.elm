@@ -230,7 +230,7 @@ openNeighbors field neig =
             in
                 case tile of
                     Just tile ->
-                        case tile.marked of
+                        case tile.marked || tile.opened of
                             True ->
                                 openNeighbors field rest
 
@@ -239,15 +239,27 @@ openNeighbors field neig =
                                     Bomb ->
                                         ( Matrix.map (\tile -> { tile | opened = True }) field, True )
 
-                                    _ ->
-                                        let
-                                            openTile =
-                                                { tile | opened = True, marked = False }
+                                    Number ->
+                                        case tile.value of
+                                            0 ->
+                                                let
+                                                    openTile =
+                                                        { tile | opened = True, marked = False }
 
-                                            newField =
-                                                Matrix.set tile.location openTile field
-                                        in
-                                            openNeighbors newField rest
+                                                    newField =
+                                                        Matrix.set tile.location openTile field
+                                                in
+                                                    openNeighbors newField (List.append rest (getNeighbors tile.location))
+
+                                            _ ->
+                                                let
+                                                    openTile =
+                                                        Debug.log "dasdad " { tile | opened = True, marked = False }
+
+                                                    newField =
+                                                        Matrix.set tile.location openTile field
+                                                in
+                                                    openNeighbors newField rest
 
                     Nothing ->
                         openNeighbors field rest
