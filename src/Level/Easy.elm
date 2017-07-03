@@ -14,7 +14,7 @@ view : Model -> Html Msg
 view model =
     div [ Style.levelTitle ]
         [ text "Easy"
-        , p [ Style.lost model.exploded ] [ text "PERDISTE PERDISTE NO HAY NADIE PEOR QUE VOS" ]
+        , p [ Style.lost model.exploded ] [ text "PERDISTE :(" ]
         , p [ Style.lost model.success ] [ text "HAS GANADO" ]
         , Minefield.getHTMLMinefield model.minefield
         , div []

@@ -20,20 +20,9 @@ update msg model =
                     parseLocation location
 
                 ( newModel, newSeed ) =
-                    case newRoute of
-                        EasyRoute ->
-                            Minefield.new 10 10 20 model.seed
-
-                        MediumRoute ->
-                            Minefield.new 25 25 30 model.seed
-
-                        DifficultRoute ->
-                            Minefield.new 40 40 70 model.seed
-
-                        _ ->
-                            Minefield.new 0 0 0 model.seed
+                    Minefield.getMinefield newRoute
             in
-                ( { model | minefield = newModel, seed = newSeed, route = newRoute }, Cmd.none )
+                ( { model | minefield = newModel, seed = newSeed, route = newRoute, exploded = False, success = False }, Cmd.none )
 
         OpenTile tile ->
             case tile.opened of
@@ -111,7 +100,7 @@ update msg model =
                 ( newMinefield, newSeed ) =
                     Minefield.new prevMinefield.width prevMinefield.height prevMinefield.bombs ns
             in
-                ( { model | seed = newSeed, minefield = newMinefield }, Cmd.none )
+                ( { model | seed = newSeed, minefield = newMinefield, exploded = False, success = False }, Cmd.none )
 
         Refresh ->
             ( model, Task.perform NewTime Time.now )

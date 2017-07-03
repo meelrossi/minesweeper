@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
-<html><head><link rel="icon" href="https://lh5.ggpht.com/Z38RGi9W_pEdZDmEYafzHviPk2GXQ2_RmQ0xbGEZbjp7H6LgPOoq-j0Di65MgSmhjxD_=w300">
-<link href="https://fonts.googleapis.com/css?family=Dosis" rel="stylesheet"><meta charset="UTF-8"><title>Main</title><style>html,head,body { padding:0; margin:0; }
+<html><head><meta charset="UTF-8"><link rel="icon" href="https://lh5.ggpht.com/Z38RGi9W_pEdZDmEYafzHviPk2GXQ2_RmQ0xbGEZbjp7H6LgPOoq-j0Di65MgSmhjxD_=w300">
+<link href="https://fonts.googleapis.com/css?family=Dosis" rel="stylesheet">
+<title>Minesweeper</title><style>html,head,body { padding:0; margin:0; }
 body { font-family: calibri, helvetica, arial, sans-serif; }</style><script type="text/javascript">
 (function() {
 'use strict';
@@ -11498,7 +11499,7 @@ var _user$project$Level_Difficult$view = function (model) {
 					},
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html$text('PERDISTE PERDISTE NO HAY NADIE PEOR QUE VOS'),
+						_0: _elm_lang$html$Html$text('PERDISTE :('),
 						_1: {ctor: '[]'}
 					}),
 				_1: {
@@ -11591,7 +11592,7 @@ var _user$project$Level_Easy$view = function (model) {
 					},
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html$text('PERDISTE PERDISTE NO HAY NADIE PEOR QUE VOS'),
+						_0: _elm_lang$html$Html$text('PERDISTE :('),
 						_1: {ctor: '[]'}
 					}),
 				_1: {
@@ -11684,7 +11685,7 @@ var _user$project$Level_Medium$view = function (model) {
 					},
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html$text('PERDISTE PERDISTE NO HAY NADIE PEOR QUE VOS'),
+						_0: _elm_lang$html$Html$text('PERDISTE :('),
 						_1: {ctor: '[]'}
 					}),
 				_1: {
@@ -11911,36 +11912,24 @@ var _user$project$Update$update = F2(
 		switch (_p0.ctor) {
 			case 'OnLocationChange':
 				var newRoute = _user$project$Routing$parseLocation(_p0._0);
-				var _p1 = function () {
-					var _p2 = newRoute;
-					switch (_p2.ctor) {
-						case 'EasyRoute':
-							return A4(_user$project$Minefield$new, 10, 10, 20, model.seed);
-						case 'MediumRoute':
-							return A4(_user$project$Minefield$new, 25, 25, 30, model.seed);
-						case 'DifficultRoute':
-							return A4(_user$project$Minefield$new, 40, 40, 70, model.seed);
-						default:
-							return A4(_user$project$Minefield$new, 0, 0, 0, model.seed);
-					}
-				}();
+				var _p1 = _user$project$Minefield$getMinefield(newRoute);
 				var newModel = _p1._0;
 				var newSeed = _p1._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{minefield: newModel, seed: newSeed, route: newRoute}),
+						{minefield: newModel, seed: newSeed, route: newRoute, exploded: false, success: false}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'OpenTile':
-				var _p8 = _p0._0;
-				var _p3 = _p8.opened;
-				if (_p3 === true) {
+				var _p7 = _p0._0;
+				var _p2 = _p7.opened;
+				if (_p2 === true) {
 					var prevMinefield = model.minefield;
-					var _p4 = A2(_user$project$Minefield$checkAndOpenNeighbors, prevMinefield.field, _p8);
-					var newField = _p4._0;
-					var exp = _p4._1;
+					var _p3 = A2(_user$project$Minefield$checkAndOpenNeighbors, prevMinefield.field, _p7);
+					var newField = _p3._0;
+					var exp = _p3._1;
 					var newMinefield = _elm_lang$core$Native_Utils.update(
 						prevMinefield,
 						{field: newField});
@@ -11953,12 +11942,12 @@ var _user$project$Update$update = F2(
 					};
 				} else {
 					var openTile = _elm_lang$core$Native_Utils.update(
-						_p8,
+						_p7,
 						{opened: true, marked: false});
 					var prevMinefield = model.minefield;
-					var _p5 = function () {
-						var _p6 = openTile.tp;
-						if (_p6.ctor === 'Bomb') {
+					var _p4 = function () {
+						var _p5 = openTile.tp;
+						if (_p5.ctor === 'Bomb') {
 							return {
 								ctor: '_Tuple2',
 								_0: A2(
@@ -11972,27 +11961,27 @@ var _user$project$Update$update = F2(
 								_1: true
 							};
 						} else {
-							var _p7 = openTile.value;
-							if (_p7 === 0) {
+							var _p6 = openTile.value;
+							if (_p6 === 0) {
 								return {
 									ctor: '_Tuple2',
 									_0: A2(
 										_user$project$Minefield$clearNeighbors,
-										A3(_chendrix$elm_matrix$Matrix$set, _p8.location, openTile, prevMinefield.field),
+										A3(_chendrix$elm_matrix$Matrix$set, _p7.location, openTile, prevMinefield.field),
 										_user$project$Minefield$getNeighbors(openTile.location)),
 									_1: false || model.exploded
 								};
 							} else {
 								return {
 									ctor: '_Tuple2',
-									_0: A3(_chendrix$elm_matrix$Matrix$set, _p8.location, openTile, prevMinefield.field),
+									_0: A3(_chendrix$elm_matrix$Matrix$set, _p7.location, openTile, prevMinefield.field),
 									_1: false || model.exploded
 								};
 							}
 						}
 					}();
-					var newField = _p5._0;
-					var exp = _p5._1;
+					var newField = _p4._0;
+					var exp = _p4._1;
 					var newMinefield = _elm_lang$core$Native_Utils.update(
 						prevMinefield,
 						{field: newField});
@@ -12005,15 +11994,15 @@ var _user$project$Update$update = F2(
 					};
 				}
 			case 'MarkTile':
-				var _p10 = _p0._0;
+				var _p9 = _p0._0;
 				var markTile = _elm_lang$core$Native_Utils.update(
-					_p10,
-					{marked: !_p10.marked});
+					_p9,
+					{marked: !_p9.marked});
 				var prevMinefield = model.minefield;
-				var newField = A3(_chendrix$elm_matrix$Matrix$set, _p10.location, markTile, prevMinefield.field);
+				var newField = A3(_chendrix$elm_matrix$Matrix$set, _p9.location, markTile, prevMinefield.field);
 				var marks = function () {
-					var _p9 = markTile.marked;
-					if (_p9 === true) {
+					var _p8 = markTile.marked;
+					if (_p8 === true) {
 						return prevMinefield.marks + 1;
 					} else {
 						return prevMinefield.marks - 1;
@@ -12033,14 +12022,14 @@ var _user$project$Update$update = F2(
 				var ns = _mgold$elm_random_pcg$Random_Pcg$initialSeed(
 					_elm_lang$core$Basics$round(_p0._0));
 				var prevMinefield = model.minefield;
-				var _p11 = A4(_user$project$Minefield$new, prevMinefield.width, prevMinefield.height, prevMinefield.bombs, ns);
-				var newMinefield = _p11._0;
-				var newSeed = _p11._1;
+				var _p10 = A4(_user$project$Minefield$new, prevMinefield.width, prevMinefield.height, prevMinefield.bombs, ns);
+				var newMinefield = _p10._0;
+				var newSeed = _p10._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{seed: newSeed, minefield: newMinefield}),
+						{seed: newSeed, minefield: newMinefield, exploded: false, success: false}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			default:
