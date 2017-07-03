@@ -19,5 +19,6 @@ view =
             , a [ Style.menuButton, href easyPath ] [ text "Easy Level" ]
             , a [ Style.menuButton, href mediumPath ] [ text "Medium Level" ]
             , a [ Style.menuButton, href difficultPath ] [ text "Difficult Level" ]
+            , a [ Style.helpButton, href helpPath ] [ text "Help" ]
             ]
         ]

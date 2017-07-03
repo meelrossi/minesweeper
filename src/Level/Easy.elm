@@ -16,7 +16,7 @@ view model =
         [ text "Easy"
         , p [ Style.lost model.exploded ] [ text "PERDISTE :(" ]
         , p [ Style.lost model.success ] [ text "HAS GANADO" ]
-        , Minefield.getHTMLMinefield model.minefield
+        , Minefield.getHTMLMinefield model
         , div []
             [ a [ Style.levelLink, href menuPath ]
                 [ text "Go to Menu" ]

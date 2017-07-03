@@ -4,6 +4,7 @@ import Models exposing (..)
 import Html exposing (..)
 import Msgs exposing (..)
 import Menu
+import Help
 import Level.Easy
 import Level.Medium
 import Level.Difficult
@@ -29,6 +30,9 @@ page model =
 
         DifficultRoute ->
             Level.Difficult.view model
+
+        HelpRoute ->
+            Help.view model
 
         NotFoundRoute ->
             notFoundView

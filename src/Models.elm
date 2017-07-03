@@ -41,4 +41,5 @@ type Route
     | EasyRoute
     | MediumRoute
     | DifficultRoute
+    | HelpRoute
     | NotFoundRoute

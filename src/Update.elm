@@ -25,45 +25,73 @@ update msg model =
                 ( { model | minefield = newModel, seed = newSeed, route = newRoute, exploded = False, success = False }, Cmd.none )
 
         OpenTile tile ->
-            case tile.opened of
+            case model.success || model.exploded of
                 True ->
-                    let
-                        prevMinefield =
-                            model.minefield
-
-                        ( newField, exp ) =
-                            checkAndOpenNeighbors prevMinefield.field tile
-
-                        newMinefield =
-                            { prevMinefield | field = newField }
-                    in
-                        ( { model | minefield = newMinefield, exploded = exp }, Cmd.none )
+                    ( model, Cmd.none )
 
                 False ->
                     let
-                        prevMinefield =
-                            model.minefield
+                        ( minefield, exp ) =
+                            case tile.opened of
+                                True ->
+                                    let
+                                        prevMinefield =
+                                            model.minefield
 
-                        openTile =
-                            { tile | opened = True, marked = False }
+                                        ( newField, exp ) =
+                                            checkAndOpenNeighbors prevMinefield.field tile
 
-                        ( newField, exp ) =
-                            case openTile.tp of
-                                Bomb ->
-                                    ( Matrix.map (\tile -> { tile | opened = True }) prevMinefield.field, True )
+                                        newMinefield =
+                                            { prevMinefield | field = newField }
+                                    in
+                                        ( newMinefield, exp )
 
-                                Number ->
-                                    case openTile.value of
-                                        0 ->
-                                            ( Minefield.clearNeighbors (Matrix.set tile.location openTile prevMinefield.field) (getNeighbors openTile.location), False || model.exploded )
+                                False ->
+                                    let
+                                        prevMinefield =
+                                            model.minefield
 
-                                        _ ->
-                                            ( Matrix.set tile.location openTile prevMinefield.field, False || model.exploded )
+                                        openTile =
+                                            { tile | opened = True, marked = False }
+
+                                        ( newField, exp ) =
+                                            case openTile.tp of
+                                                Bomb ->
+                                                    ( Matrix.map (\tile -> { tile | opened = True }) prevMinefield.field, True )
+
+                                                Number ->
+                                                    case openTile.value of
+                                                        0 ->
+                                                            ( Minefield.clearNeighbors (Matrix.set tile.location openTile prevMinefield.field) (getNeighbors openTile.location), False || model.exploded )
+
+                                                        _ ->
+                                                            ( Matrix.set tile.location openTile prevMinefield.field, False || model.exploded )
+
+                                        newMinefield =
+                                            { prevMinefield | field = newField }
+                                    in
+                                        ( newMinefield, exp )
+
+                        success =
+                            case exp of
+                                True ->
+                                    False
+
+                                False ->
+                                    Minefield.checkSuccess (Matrix.toList minefield.field)
+
+                        successField =
+                            case success of
+                                True ->
+                                    Matrix.map (\tile -> { tile | opened = True }) minefield.field
+
+                                False ->
+                                    minefield.field
 
                         newMinefield =
-                            { prevMinefield | field = newField }
+                            { minefield | field = successField }
                     in
-                        ( { model | minefield = newMinefield, exploded = exp }, Cmd.none )
+                        ( { model | minefield = newMinefield, exploded = exp, success = success }, Cmd.none )
 
         MarkTile tile ->
             let
@@ -77,12 +105,17 @@ update msg model =
                     Matrix.set tile.location markTile prevMinefield.field
 
                 marks =
-                    case markTile.marked of
+                    case markTile.opened of
                         True ->
-                            prevMinefield.marks + 1
+                            prevMinefield.marks
 
                         False ->
-                            prevMinefield.marks - 1
+                            case markTile.marked of
+                                True ->
+                                    prevMinefield.marks + 1
+
+                                False ->
+                                    prevMinefield.marks - 1
 
                 newMinefield =
                     { prevMinefield | field = newField, marks = marks }

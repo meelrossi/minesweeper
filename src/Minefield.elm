@@ -11,6 +11,41 @@ import Html.Events exposing (onClick, onWithOptions)
 import Json.Decode as Json
 
 
+checkSuccess : List (List Tile) -> Bool
+checkSuccess tiles =
+    case tiles of
+        [] ->
+            True
+
+        xs :: rest ->
+            case checkRowSuccess xs of
+                True ->
+                    checkSuccess rest
+
+                False ->
+                    False
+
+
+checkRowSuccess : List Tile -> Bool
+checkRowSuccess rows =
+    case rows of
+        [] ->
+            True
+
+        xs :: rest ->
+            case xs.tp of
+                Number ->
+                    case xs.opened of
+                        True ->
+                            checkRowSuccess rest
+
+                        False ->
+                            False
+
+                Bomb ->
+                    checkRowSuccess rest
+
+
 getMinefield : Route -> ( Minefield, Seed )
 getMinefield route =
     case route of
@@ -79,33 +114,45 @@ isMine ( x, y ) positions =
         0
 
 
-getHTMLMinefield : Minefield -> Html Msg
-getHTMLMinefield minefield =
-    div [ Style.minefield ]
-        [ p [ Style.bombsText ] [ text (String.concat [ toString (minefield.marks), "/", toString (minefield.bombs) ]), img [ Style.bombImage, src "src/resources/bomb.png" ] [] ]
-        , div []
-            [ table []
-                (List.map
-                    (\row ->
-                        tr []
-                            (List.map
-                                (\column ->
-                                    td [ (Style.tile column), onClick (Msgs.OpenTile column), onRightClick (Msgs.MarkTile column) ] (getColumnTile column)
+getHTMLMinefield : Model -> Html Msg
+getHTMLMinefield model =
+    let
+        minefield =
+            model.minefield
+
+        success =
+            model.success
+    in
+        div [ Style.minefield ]
+            [ p [ Style.bombsText ] [ text (String.concat [ toString (minefield.marks), "/", toString (minefield.bombs) ]), img [ Style.bombImage, src "src/resources/bomb.png" ] [] ]
+            , div []
+                [ table []
+                    (List.map
+                        (\row ->
+                            tr []
+                                (List.map
+                                    (\column ->
+                                        td [ (Style.tile column), onClick (Msgs.OpenTile column), onRightClick (Msgs.MarkTile column) ] (getColumnTile column success)
+                                    )
+                                    row
                                 )
-                                row
-                            )
+                        )
+                        (Matrix.toList minefield.field)
                     )
-                    (Matrix.toList minefield.field)
-                )
+                ]
             ]
-        ]
 
 
-getItem : Int -> Html Msg
-getItem n =
+getItem : Int -> Bool -> Html Msg
+getItem n success =
     case n of
         9 ->
-            img [ Style.bombImage, src "src/resources/bomb.png" ] []
+            case success of
+                True ->
+                    img [ Style.flagImage, src "src/resources/flag.png" ] []
+
+                False ->
+                    img [ Style.bombImage, src "src/resources/bomb.png" ] []
 
         0 ->
             text ""
@@ -114,11 +161,11 @@ getItem n =
             text (toString (n))
 
 
-getColumnTile : Tile -> List (Html Msg)
-getColumnTile tile =
+getColumnTile : Tile -> Bool -> List (Html Msg)
+getColumnTile tile success =
     case tile.opened of
         True ->
-            [ b [] [ p [ Style.number tile.value ] [ getItem tile.value ] ] ]
+            [ b [] [ p [ Style.number tile.value ] [ getItem tile.value success ] ] ]
 
         False ->
             case tile.marked of
@@ -203,7 +250,7 @@ openNeighbors field neig =
                                             openNeighbors newField rest
 
                     Nothing ->
-                        ( field, False )
+                        openNeighbors field rest
 
 
 clearNeighbors : Matrix Tile -> List Location -> Matrix Tile

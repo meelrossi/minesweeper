@@ -13,6 +13,7 @@ matchers =
         , map EasyRoute (s "easy")
         , map MediumRoute (s "medium")
         , map DifficultRoute (s "difficult")
+        , map HelpRoute (s "help")
         ]
 
 
@@ -44,3 +45,8 @@ mediumPath =
 difficultPath : String
 difficultPath =
     "#difficult"
+
+
+helpPath : String
+helpPath =
+    "#help"

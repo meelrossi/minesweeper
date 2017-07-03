@@ -1,7 +1,5 @@
 <!DOCTYPE HTML>
-<html><head><meta charset="UTF-8"><link rel="icon" href="https://lh5.ggpht.com/Z38RGi9W_pEdZDmEYafzHviPk2GXQ2_RmQ0xbGEZbjp7H6LgPOoq-j0Di65MgSmhjxD_=w300">
-<link href="https://fonts.googleapis.com/css?family=Dosis" rel="stylesheet">
-<title>Minesweeper</title><style>html,head,body { padding:0; margin:0; }
+<html><head><meta charset="UTF-8"><title>Main</title><style>html,head,body { padding:0; margin:0; }
 body { font-family: calibri, helvetica, arial, sans-serif; }</style><script type="text/javascript">
 (function() {
 'use strict';
@@ -10571,6 +10569,7 @@ var _user$project$Models$Tile = F5(
 var _user$project$Models$Bomb = {ctor: 'Bomb'};
 var _user$project$Models$Number = {ctor: 'Number'};
 var _user$project$Models$NotFoundRoute = {ctor: 'NotFoundRoute'};
+var _user$project$Models$HelpRoute = {ctor: 'HelpRoute'};
 var _user$project$Models$DifficultRoute = {ctor: 'DifficultRoute'};
 var _user$project$Models$MediumRoute = {ctor: 'MediumRoute'};
 var _user$project$Models$EasyRoute = {ctor: 'EasyRoute'};
@@ -10588,6 +10587,34 @@ var _user$project$Msgs$OpenTile = function (a) {
 var _user$project$Msgs$OnLocationChange = function (a) {
 	return {ctor: 'OnLocationChange', _0: a};
 };
+var _user$project$Style$helpText = _elm_lang$html$Html_Attributes$style(
+	{
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 'font-size', _1: '30px'},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'color', _1: 'black'},
+			_1: {ctor: '[]'}
+		}
+	});
+var _user$project$Style$helpTitle = _elm_lang$html$Html_Attributes$style(
+	{
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 'font-size', _1: '60px'},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'color', _1: _user$project$CustomColors$orange},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'margin', _1: '20px'},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
+					_1: {ctor: '[]'}
+				}
+			}
+		}
+	});
 var _user$project$Style$lost = function (exploded) {
 	var _p0 = exploded;
 	if (_p0 === false) {
@@ -10732,6 +10759,44 @@ var _user$project$Style$menuTitle = _elm_lang$html$Html_Attributes$style(
 							ctor: '::',
 							_0: {ctor: '_Tuple2', _0: 'padding', _1: '20px'},
 							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		}
+	});
+var _user$project$Style$helpButton = _elm_lang$html$Html_Attributes$style(
+	{
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 'margin', _1: '0 auto 30px auto'},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'width', _1: '300px'},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'padding', _1: '15px'},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'border-radius', _1: '10px'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'background', _1: _user$project$CustomColors$orange},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'font-size', _1: '20px'},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'display', _1: 'block'},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'text-decoration', _1: 'none'},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'color', _1: 'black'},
+										_1: {ctor: '[]'}
+									}
+								}
+							}
 						}
 					}
 				}
@@ -10929,6 +10994,94 @@ var _user$project$Style$tile = function (t) {
 			}
 		});
 };
+var _user$project$Help$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _user$project$Style$helpTitle,
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$p,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('HELP'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$p,
+							{
+								ctor: '::',
+								_0: _user$project$Style$helpText,
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('right click: mark tile as bomb'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$p,
+								{
+									ctor: '::',
+									_0: _user$project$Style$helpText,
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('left click on un-opened tile: open tile'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$p,
+									{
+										ctor: '::',
+										_0: _user$project$Style$helpText,
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('left click on opened tile: open neighbors'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$p,
+										{
+											ctor: '::',
+											_0: _user$project$Style$helpText,
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text('refresh button: create new play'),
+											_1: {ctor: '[]'}
+										}),
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
 var _user$project$Minefield$openNeighbors = F2(
 	function (field, neig) {
 		openNeighbors:
@@ -10977,7 +11130,11 @@ var _user$project$Minefield$openNeighbors = F2(
 						}
 					}
 				} else {
-					return {ctor: '_Tuple2', _0: field, _1: false};
+					var _v8 = field,
+						_v9 = _p5;
+					field = _v8;
+					neig = _v9;
+					continue openNeighbors;
 				}
 			}
 		}
@@ -11062,19 +11219,19 @@ var _user$project$Minefield$clearNeighbors = F2(
 				var tile = A2(_chendrix$elm_matrix$Matrix$get, _p17, field);
 				var _p13 = tile;
 				if (_p13.ctor === 'Nothing') {
-					var _v13 = field,
-						_v14 = _p18;
-					field = _v13;
-					tiles = _v14;
+					var _v15 = field,
+						_v16 = _p18;
+					field = _v15;
+					tiles = _v16;
 					continue clearNeighbors;
 				} else {
 					var _p16 = _p13._0;
 					var _p14 = _p16.opened || _p16.marked;
 					if (_p14 === true) {
-						var _v16 = field,
-							_v17 = _p18;
-						field = _v16;
-						tiles = _v17;
+						var _v18 = field,
+							_v19 = _p18;
+						field = _v18;
+						tiles = _v19;
 						continue clearNeighbors;
 					} else {
 						var openedTile = _elm_lang$core$Native_Utils.update(
@@ -11083,19 +11240,19 @@ var _user$project$Minefield$clearNeighbors = F2(
 						var newField = A3(_chendrix$elm_matrix$Matrix$set, _p17, openedTile, field);
 						var _p15 = _p16.value;
 						if (_p15 === 0) {
-							var _v19 = newField,
-								_v20 = A2(
+							var _v21 = newField,
+								_v22 = A2(
 								_elm_lang$core$List$append,
 								_p18,
 								_user$project$Minefield$getNeighbors(_p17));
-							field = _v19;
-							tiles = _v20;
-							continue clearNeighbors;
-						} else {
-							var _v21 = newField,
-								_v22 = _p18;
 							field = _v21;
 							tiles = _v22;
+							continue clearNeighbors;
+						} else {
+							var _v23 = newField,
+								_v24 = _p18;
+							field = _v23;
+							tiles = _v24;
 							continue clearNeighbors;
 						}
 					}
@@ -11103,57 +11260,49 @@ var _user$project$Minefield$clearNeighbors = F2(
 			}
 		}
 	});
-var _user$project$Minefield$getItem = function (n) {
-	var _p19 = n;
-	switch (_p19) {
-		case 9:
-			return A2(
-				_elm_lang$html$Html$img,
-				{
-					ctor: '::',
-					_0: _user$project$Style$bombImage,
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$src('src/resources/bomb.png'),
-						_1: {ctor: '[]'}
-					}
-				},
-				{ctor: '[]'});
-		case 0:
-			return _elm_lang$html$Html$text('');
-		default:
-			return _elm_lang$html$Html$text(
-				_elm_lang$core$Basics$toString(n));
-	}
-};
-var _user$project$Minefield$getColumnTile = function (tile) {
-	var _p20 = tile.opened;
-	if (_p20 === true) {
-		return {
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$b,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$p,
+var _user$project$Minefield$getItem = F2(
+	function (n, success) {
+		var _p19 = n;
+		switch (_p19) {
+			case 9:
+				var _p20 = success;
+				if (_p20 === true) {
+					return A2(
+						_elm_lang$html$Html$img,
 						{
 							ctor: '::',
-							_0: _user$project$Style$number(tile.value),
-							_1: {ctor: '[]'}
+							_0: _user$project$Style$flagImage,
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$src('src/resources/flag.png'),
+								_1: {ctor: '[]'}
+							}
 						},
+						{ctor: '[]'});
+				} else {
+					return A2(
+						_elm_lang$html$Html$img,
 						{
 							ctor: '::',
-							_0: _user$project$Minefield$getItem(tile.value),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		};
-	} else {
-		var _p21 = tile.marked;
+							_0: _user$project$Style$bombImage,
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$src('src/resources/bomb.png'),
+								_1: {ctor: '[]'}
+							}
+						},
+						{ctor: '[]'});
+				}
+			case 0:
+				return _elm_lang$html$Html$text('');
+			default:
+				return _elm_lang$html$Html$text(
+					_elm_lang$core$Basics$toString(n));
+		}
+	});
+var _user$project$Minefield$getColumnTile = F2(
+	function (tile, success) {
+		var _p21 = tile.opened;
 		if (_p21 === true) {
 			return {
 				ctor: '::',
@@ -11166,23 +11315,12 @@ var _user$project$Minefield$getColumnTile = function (tile) {
 							_elm_lang$html$Html$p,
 							{
 								ctor: '::',
-								_0: _user$project$Style$tileImage,
+								_0: _user$project$Style$number(tile.value),
 								_1: {ctor: '[]'}
 							},
 							{
 								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$img,
-									{
-										ctor: '::',
-										_0: _user$project$Style$flagImage,
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$src('src/resources/flag.png'),
-											_1: {ctor: '[]'}
-										}
-									},
-									{ctor: '[]'}),
+								_0: A2(_user$project$Minefield$getItem, tile.value, success),
 								_1: {ctor: '[]'}
 							}),
 						_1: {ctor: '[]'}
@@ -11190,16 +11328,53 @@ var _user$project$Minefield$getColumnTile = function (tile) {
 				_1: {ctor: '[]'}
 			};
 		} else {
-			return {ctor: '[]'};
+			var _p22 = tile.marked;
+			if (_p22 === true) {
+				return {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$b,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$p,
+								{
+									ctor: '::',
+									_0: _user$project$Style$tileImage,
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$img,
+										{
+											ctor: '::',
+											_0: _user$project$Style$flagImage,
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$src('src/resources/flag.png'),
+												_1: {ctor: '[]'}
+											}
+										},
+										{ctor: '[]'}),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				};
+			} else {
+				return {ctor: '[]'};
+			}
 		}
-	}
-};
+	});
 var _user$project$Minefield$isMine = F2(
-	function (_p22, positions) {
-		var _p23 = _p22;
+	function (_p23, positions) {
+		var _p24 = _p23;
 		return A2(
 			_elm_lang$core$List$member,
-			{ctor: '_Tuple2', _0: _p23._0, _1: _p23._1},
+			{ctor: '_Tuple2', _0: _p24._0, _1: _p24._1},
 			positions) ? 1 : 0;
 	});
 var _user$project$Minefield$getRandomPositions = F5(
@@ -11211,38 +11386,38 @@ var _user$project$Minefield$getRandomPositions = F5(
 				bombs)) {
 				return {ctor: '_Tuple2', _0: positions, _1: seed};
 			} else {
-				var _p24 = A2(
+				var _p25 = A2(
 					_mgold$elm_random_pcg$Random_Pcg$step,
 					A2(
 						_mgold$elm_random_pcg$Random_Pcg$pair,
 						A2(_mgold$elm_random_pcg$Random_Pcg$int, 0, height - 1),
 						A2(_mgold$elm_random_pcg$Random_Pcg$int, 0, width - 1)),
 					seed);
-				var loc = _p24._0;
-				var seed1 = _p24._1;
+				var loc = _p25._0;
+				var seed1 = _p25._1;
 				if (A2(_elm_lang$core$List$member, loc, positions)) {
-					var _v27 = width,
-						_v28 = height,
-						_v29 = bombs,
-						_v30 = seed1,
-						_v31 = positions;
-					width = _v27;
-					height = _v28;
-					bombs = _v29;
-					seed = _v30;
-					positions = _v31;
+					var _v30 = width,
+						_v31 = height,
+						_v32 = bombs,
+						_v33 = seed1,
+						_v34 = positions;
+					width = _v30;
+					height = _v31;
+					bombs = _v32;
+					seed = _v33;
+					positions = _v34;
 					continue getRandomPositions;
 				} else {
-					var _v32 = width,
-						_v33 = height,
-						_v34 = bombs,
-						_v35 = seed1,
-						_v36 = {ctor: '::', _0: loc, _1: positions};
-					width = _v32;
-					height = _v33;
-					bombs = _v34;
-					seed = _v35;
-					positions = _v36;
+					var _v35 = width,
+						_v36 = height,
+						_v37 = bombs,
+						_v38 = seed1,
+						_v39 = {ctor: '::', _0: loc, _1: positions};
+					width = _v35;
+					height = _v36;
+					bombs = _v37;
+					seed = _v38;
+					positions = _v39;
 					continue getRandomPositions;
 				}
 			}
@@ -11255,7 +11430,9 @@ var _user$project$Minefield$onRightClick = function (message) {
 		{stopPropagation: true, preventDefault: true},
 		_elm_lang$core$Json_Decode$succeed(message));
 };
-var _user$project$Minefield$getHTMLMinefield = function (minefield) {
+var _user$project$Minefield$getHTMLMinefield = function (model) {
+	var success = model.success;
+	var minefield = model.minefield;
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -11342,7 +11519,7 @@ var _user$project$Minefield$getHTMLMinefield = function (minefield) {
 															}
 														}
 													},
-													_user$project$Minefield$getColumnTile(column));
+													A2(_user$project$Minefield$getColumnTile, column, success));
 											},
 											row));
 								},
@@ -11355,15 +11532,15 @@ var _user$project$Minefield$getHTMLMinefield = function (minefield) {
 };
 var _user$project$Minefield$new = F4(
 	function (width, height, bombs, seed0) {
-		var _p25 = A5(
+		var _p26 = A5(
 			_user$project$Minefield$getRandomPositions,
 			width,
 			height,
 			bombs,
 			seed0,
 			{ctor: '[]'});
-		var positions = _p25._0;
-		var seed = _p25._1;
+		var positions = _p26._0;
+		var seed = _p26._1;
 		var matrix = A3(
 			_chendrix$elm_matrix$Matrix$matrix,
 			height,
@@ -11399,8 +11576,8 @@ var _user$project$Minefield$new = F4(
 		};
 	});
 var _user$project$Minefield$getMinefield = function (route) {
-	var _p26 = route;
-	switch (_p26.ctor) {
+	var _p27 = route;
+	switch (_p27.ctor) {
 		case 'EasyRoute':
 			return A4(
 				_user$project$Minefield$new,
@@ -11431,6 +11608,52 @@ var _user$project$Minefield$getMinefield = function (route) {
 				_mgold$elm_random_pcg$Random_Pcg$initialSeed(0));
 	}
 };
+var _user$project$Minefield$checkRowSuccess = function (rows) {
+	checkRowSuccess:
+	while (true) {
+		var _p28 = rows;
+		if (_p28.ctor === '[]') {
+			return true;
+		} else {
+			var _p32 = _p28._0;
+			var _p31 = _p28._1;
+			var _p29 = _p32.tp;
+			if (_p29.ctor === 'Number') {
+				var _p30 = _p32.opened;
+				if (_p30 === true) {
+					var _v44 = _p31;
+					rows = _v44;
+					continue checkRowSuccess;
+				} else {
+					return false;
+				}
+			} else {
+				var _v45 = _p31;
+				rows = _v45;
+				continue checkRowSuccess;
+			}
+		}
+	}
+};
+var _user$project$Minefield$checkSuccess = function (tiles) {
+	checkSuccess:
+	while (true) {
+		var _p33 = tiles;
+		if (_p33.ctor === '[]') {
+			return true;
+		} else {
+			var _p34 = _user$project$Minefield$checkRowSuccess(_p33._0);
+			if (_p34 === true) {
+				var _v48 = _p33._1;
+				tiles = _v48;
+				continue checkSuccess;
+			} else {
+				return false;
+			}
+		}
+	}
+};
+var _user$project$Routing$helpPath = '#help';
 var _user$project$Routing$difficultPath = '#difficult';
 var _user$project$Routing$mediumPath = '#medium';
 var _user$project$Routing$easyPath = '#easy';
@@ -11463,7 +11686,14 @@ var _user$project$Routing$matchers = _evancz$url_parser$UrlParser$oneOf(
 							_evancz$url_parser$UrlParser$map,
 							_user$project$Models$DifficultRoute,
 							_evancz$url_parser$UrlParser$s('difficult')),
-						_1: {ctor: '[]'}
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_evancz$url_parser$UrlParser$map,
+								_user$project$Models$HelpRoute,
+								_evancz$url_parser$UrlParser$s('help')),
+							_1: {ctor: '[]'}
+						}
 					}
 				}
 			}
@@ -11518,7 +11748,7 @@ var _user$project$Level_Difficult$view = function (model) {
 						}),
 					_1: {
 						ctor: '::',
-						_0: _user$project$Minefield$getHTMLMinefield(model.minefield),
+						_0: _user$project$Minefield$getHTMLMinefield(model),
 						_1: {
 							ctor: '::',
 							_0: A2(
@@ -11611,7 +11841,7 @@ var _user$project$Level_Easy$view = function (model) {
 						}),
 					_1: {
 						ctor: '::',
-						_0: _user$project$Minefield$getHTMLMinefield(model.minefield),
+						_0: _user$project$Minefield$getHTMLMinefield(model),
 						_1: {
 							ctor: '::',
 							_0: A2(
@@ -11704,7 +11934,7 @@ var _user$project$Level_Medium$view = function (model) {
 						}),
 					_1: {
 						ctor: '::',
-						_0: _user$project$Minefield$getHTMLMinefield(model.minefield),
+						_0: _user$project$Minefield$getHTMLMinefield(model),
 						_1: {
 							ctor: '::',
 							_0: A2(
@@ -11866,7 +12096,26 @@ var _user$project$Menu$view = A2(
 									_0: _elm_lang$html$Html$text('Difficult Level'),
 									_1: {ctor: '[]'}
 								}),
-							_1: {ctor: '[]'}
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$a,
+									{
+										ctor: '::',
+										_0: _user$project$Style$helpButton,
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$href(_user$project$Routing$helpPath),
+											_1: {ctor: '[]'}
+										}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('Help'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
 						}
 					}
 				}
@@ -11892,6 +12141,8 @@ var _user$project$View$page = function (model) {
 			return _user$project$Level_Medium$view(model);
 		case 'DifficultRoute':
 			return _user$project$Level_Difficult$view(model);
+		case 'HelpRoute':
+			return _user$project$Help$view(model);
 		default:
 			return _user$project$View$notFoundView;
 	}
@@ -11923,89 +12174,125 @@ var _user$project$Update$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'OpenTile':
-				var _p7 = _p0._0;
-				var _p2 = _p7.opened;
+				var _p11 = _p0._0;
+				var _p2 = model.success || model.exploded;
 				if (_p2 === true) {
-					var prevMinefield = model.minefield;
-					var _p3 = A2(_user$project$Minefield$checkAndOpenNeighbors, prevMinefield.field, _p7);
-					var newField = _p3._0;
-					var exp = _p3._1;
-					var newMinefield = _elm_lang$core$Native_Utils.update(
-						prevMinefield,
-						{field: newField});
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{minefield: newMinefield, exploded: exp}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 				} else {
-					var openTile = _elm_lang$core$Native_Utils.update(
-						_p7,
-						{opened: true, marked: false});
-					var prevMinefield = model.minefield;
-					var _p4 = function () {
-						var _p5 = openTile.tp;
-						if (_p5.ctor === 'Bomb') {
-							return {
-								ctor: '_Tuple2',
-								_0: A2(
-									_chendrix$elm_matrix$Matrix$map,
-									function (tile) {
-										return _elm_lang$core$Native_Utils.update(
-											tile,
-											{opened: true});
-									},
-									prevMinefield.field),
-								_1: true
-							};
+					var _p3 = function () {
+						var _p4 = _p11.opened;
+						if (_p4 === true) {
+							var prevMinefield = model.minefield;
+							var _p5 = A2(_user$project$Minefield$checkAndOpenNeighbors, prevMinefield.field, _p11);
+							var newField = _p5._0;
+							var exp = _p5._1;
+							var newMinefield = _elm_lang$core$Native_Utils.update(
+								prevMinefield,
+								{field: newField});
+							return {ctor: '_Tuple2', _0: newMinefield, _1: exp};
 						} else {
-							var _p6 = openTile.value;
-							if (_p6 === 0) {
-								return {
-									ctor: '_Tuple2',
-									_0: A2(
-										_user$project$Minefield$clearNeighbors,
-										A3(_chendrix$elm_matrix$Matrix$set, _p7.location, openTile, prevMinefield.field),
-										_user$project$Minefield$getNeighbors(openTile.location)),
-									_1: false || model.exploded
-								};
-							} else {
-								return {
-									ctor: '_Tuple2',
-									_0: A3(_chendrix$elm_matrix$Matrix$set, _p7.location, openTile, prevMinefield.field),
-									_1: false || model.exploded
-								};
-							}
+							var openTile = _elm_lang$core$Native_Utils.update(
+								_p11,
+								{opened: true, marked: false});
+							var prevMinefield = model.minefield;
+							var _p6 = function () {
+								var _p7 = openTile.tp;
+								if (_p7.ctor === 'Bomb') {
+									return {
+										ctor: '_Tuple2',
+										_0: A2(
+											_chendrix$elm_matrix$Matrix$map,
+											function (tile) {
+												return _elm_lang$core$Native_Utils.update(
+													tile,
+													{opened: true});
+											},
+											prevMinefield.field),
+										_1: true
+									};
+								} else {
+									var _p8 = openTile.value;
+									if (_p8 === 0) {
+										return {
+											ctor: '_Tuple2',
+											_0: A2(
+												_user$project$Minefield$clearNeighbors,
+												A3(_chendrix$elm_matrix$Matrix$set, _p11.location, openTile, prevMinefield.field),
+												_user$project$Minefield$getNeighbors(openTile.location)),
+											_1: false || model.exploded
+										};
+									} else {
+										return {
+											ctor: '_Tuple2',
+											_0: A3(_chendrix$elm_matrix$Matrix$set, _p11.location, openTile, prevMinefield.field),
+											_1: false || model.exploded
+										};
+									}
+								}
+							}();
+							var newField = _p6._0;
+							var exp = _p6._1;
+							var newMinefield = _elm_lang$core$Native_Utils.update(
+								prevMinefield,
+								{field: newField});
+							return {ctor: '_Tuple2', _0: newMinefield, _1: exp};
 						}
 					}();
-					var newField = _p4._0;
-					var exp = _p4._1;
+					var minefield = _p3._0;
+					var exp = _p3._1;
+					var success = function () {
+						var _p9 = exp;
+						if (_p9 === true) {
+							return false;
+						} else {
+							return _user$project$Minefield$checkSuccess(
+								_chendrix$elm_matrix$Matrix$toList(minefield.field));
+						}
+					}();
+					var successField = function () {
+						var _p10 = success;
+						if (_p10 === true) {
+							return A2(
+								_chendrix$elm_matrix$Matrix$map,
+								function (tile) {
+									return _elm_lang$core$Native_Utils.update(
+										tile,
+										{opened: true});
+								},
+								minefield.field);
+						} else {
+							return minefield.field;
+						}
+					}();
 					var newMinefield = _elm_lang$core$Native_Utils.update(
-						prevMinefield,
-						{field: newField});
+						minefield,
+						{field: successField});
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{minefield: newMinefield, exploded: exp}),
+							{minefield: newMinefield, exploded: exp, success: success}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				}
 			case 'MarkTile':
-				var _p9 = _p0._0;
+				var _p14 = _p0._0;
 				var markTile = _elm_lang$core$Native_Utils.update(
-					_p9,
-					{marked: !_p9.marked});
+					_p14,
+					{marked: !_p14.marked});
 				var prevMinefield = model.minefield;
-				var newField = A3(_chendrix$elm_matrix$Matrix$set, _p9.location, markTile, prevMinefield.field);
+				var newField = A3(_chendrix$elm_matrix$Matrix$set, _p14.location, markTile, prevMinefield.field);
 				var marks = function () {
-					var _p8 = markTile.marked;
-					if (_p8 === true) {
-						return prevMinefield.marks + 1;
+					var _p12 = markTile.opened;
+					if (_p12 === true) {
+						return prevMinefield.marks;
 					} else {
-						return prevMinefield.marks - 1;
+						var _p13 = markTile.marked;
+						if (_p13 === true) {
+							return prevMinefield.marks + 1;
+						} else {
+							return prevMinefield.marks - 1;
+						}
 					}
 				}();
 				var newMinefield = _elm_lang$core$Native_Utils.update(
@@ -12022,9 +12309,9 @@ var _user$project$Update$update = F2(
 				var ns = _mgold$elm_random_pcg$Random_Pcg$initialSeed(
 					_elm_lang$core$Basics$round(_p0._0));
 				var prevMinefield = model.minefield;
-				var _p10 = A4(_user$project$Minefield$new, prevMinefield.width, prevMinefield.height, prevMinefield.bombs, ns);
-				var newMinefield = _p10._0;
-				var newSeed = _p10._1;
+				var _p15 = A4(_user$project$Minefield$new, prevMinefield.width, prevMinefield.height, prevMinefield.bombs, ns);
+				var newMinefield = _p15._0;
+				var newSeed = _p15._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(

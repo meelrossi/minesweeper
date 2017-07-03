@@ -125,6 +125,21 @@ menuButton =
         ]
 
 
+helpButton : Html.Attribute msg
+helpButton =
+    style
+        [ ( "margin", "0 auto 30px auto" )
+        , ( "width", "300px" )
+        , ( "padding", "15px" )
+        , ( "border-radius", "10px" )
+        , ( "background", CustomColors.orange )
+        , ( "font-size", "20px" )
+        , ( "display", "block" )
+        , ( "text-decoration", "none" )
+        , ( "color", "black" )
+        ]
+
+
 menuTitle : Html.Attribute msg
 menuTitle =
     style
@@ -214,3 +229,21 @@ lost exploded =
                 , ( "text-align", "center" )
                 , ( "color", CustomColors.brown )
                 ]
+
+
+helpTitle : Html.Attribute msg
+helpTitle =
+    style
+        [ ( "font-size", "60px" )
+        , ( "color", CustomColors.orange )
+        , ( "margin", "20px" )
+        , ( "text-align", "center" )
+        ]
+
+
+helpText : Html.Attribute msg
+helpText =
+    style
+        [ ( "font-size", "30px" )
+        , ( "color", "black" )
+        ]
