@@ -22,118 +22,131 @@ update msg model =
                 ( newModel, newSeed ) =
                     Minefield.getMinefield newRoute
             in
-                ( { model | minefield = newModel, seed = newSeed, route = newRoute, exploded = False, success = False }, Cmd.none )
+                ( { model | current = Game newModel Playing, seed = newSeed, route = newRoute }, Cmd.none )
 
         OpenTile tile ->
-            case model.success || model.exploded of
-                True ->
-                    ( model, Cmd.none )
-
-                False ->
+            case model.current of
+                Game minefield Playing ->
                     let
-                        ( minefield, exp ) =
-                            case tile.opened of
-                                True ->
+                        ( aMinefield, exp ) =
+                            case tile.state of
+                                Opened ->
                                     let
-                                        prevMinefield =
-                                            model.minefield
-
                                         ( newField, exp ) =
-                                            checkAndOpenNeighbors prevMinefield.field tile
+                                            checkAndOpenNeighbors minefield.field tile
 
                                         newMinefield =
-                                            { prevMinefield | field = newField }
+                                            { minefield | field = newField }
                                     in
                                         ( newMinefield, exp )
 
-                                False ->
+                                _ ->
                                     let
-                                        prevMinefield =
-                                            model.minefield
-
                                         openTile =
-                                            { tile | opened = True, marked = False }
+                                            { tile | state = Opened }
 
                                         ( newField, exp ) =
                                             case openTile.tp of
                                                 Bomb ->
-                                                    ( Matrix.map (\tile -> { tile | opened = True }) prevMinefield.field, True )
+                                                    ( Matrix.map (\tile -> { tile | state = Opened }) minefield.field, True )
 
-                                                Number ->
-                                                    case openTile.value of
-                                                        0 ->
-                                                            ( Minefield.clearNeighbors (Matrix.set tile.location openTile prevMinefield.field) (getNeighbors openTile.location), False || model.exploded )
+                                                Number 0 ->
+                                                    ( Minefield.clearNeighbors (Matrix.set tile.location openTile minefield.field) (getNeighbors openTile.location), False )
 
-                                                        _ ->
-                                                            ( Matrix.set tile.location openTile prevMinefield.field, False || model.exploded )
+                                                Number _ ->
+                                                    ( Matrix.set tile.location openTile minefield.field, False )
 
                                         newMinefield =
-                                            { prevMinefield | field = newField }
+                                            { minefield | field = newField }
                                     in
                                         ( newMinefield, exp )
 
-                        success =
+                        state =
                             case exp of
                                 True ->
-                                    False
+                                    Lose
 
                                 False ->
-                                    Minefield.checkSuccess (Matrix.toList minefield.field)
+                                    case (Minefield.checkSuccess (Matrix.toList aMinefield.field)) of
+                                        True ->
+                                            Win
+
+                                        False ->
+                                            Playing
 
                         successField =
-                            case success of
-                                True ->
-                                    Matrix.map (\tile -> { tile | opened = True }) minefield.field
+                            case state of
+                                Win ->
+                                    Matrix.map (\tile -> { tile | state = Opened }) aMinefield.field
 
-                                False ->
-                                    minefield.field
+                                _ ->
+                                    aMinefield.field
 
                         newMinefield =
                             { minefield | field = successField }
                     in
-                        ( { model | minefield = newMinefield, exploded = exp, success = success }, Cmd.none )
+                        ( { model | current = Game newMinefield state }, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
 
         MarkTile tile ->
-            let
-                prevMinefield =
-                    model.minefield
+            case model.current of
+                Game minefield _ ->
+                    let
+                        prevMinefield =
+                            minefield
 
-                markTile =
-                    { tile | marked = not tile.marked }
+                        markTile =
+                            case tile.state of
+                                Marked ->
+                                    { tile | state = Closed }
 
-                newField =
-                    Matrix.set tile.location markTile prevMinefield.field
+                                Closed ->
+                                    { tile | state = Marked }
 
-                marks =
-                    case markTile.opened of
-                        True ->
-                            prevMinefield.marks
+                                Opened ->
+                                    tile
 
-                        False ->
-                            case markTile.marked of
-                                True ->
-                                    prevMinefield.marks + 1
+                        newField =
+                            Matrix.set tile.location markTile prevMinefield.field
 
-                                False ->
+                        marks =
+                            case markTile.state of
+                                Opened ->
+                                    prevMinefield.marks
+
+                                Closed ->
                                     prevMinefield.marks - 1
 
-                newMinefield =
-                    { prevMinefield | field = newField, marks = marks }
-            in
-                ( { model | minefield = newMinefield }, Cmd.none )
+                                Marked ->
+                                    prevMinefield.marks + 1
+
+                        newMinefield =
+                            { prevMinefield | field = newField, marks = marks }
+                    in
+                        ( { model | current = Game newMinefield Playing }, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
 
         NewTime time ->
-            let
-                prevMinefield =
-                    model.minefield
+            case model.current of
+                Game minefield _ ->
+                    let
+                        prevMinefield =
+                            minefield
 
-                ns =
-                    initialSeed (round time)
+                        ns =
+                            initialSeed (round time)
 
-                ( newMinefield, newSeed ) =
-                    Minefield.new prevMinefield.width prevMinefield.height prevMinefield.bombs ns
-            in
-                ( { model | seed = newSeed, minefield = newMinefield, exploded = False, success = False }, Cmd.none )
+                        ( newMinefield, newSeed ) =
+                            Minefield.new prevMinefield.width prevMinefield.height prevMinefield.bombs ns
+                    in
+                        ( { model | seed = newSeed, current = Game newMinefield Playing }, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
 
         Refresh ->
             ( model, Task.perform NewTime Time.now )

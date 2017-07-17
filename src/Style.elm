@@ -18,11 +18,11 @@ tile t =
 
 getTileColor : Tile -> String
 getTileColor t =
-    case t.opened of
-        True ->
+    case t.state of
+        Opened ->
             CustomColors.lightgrey
 
-        False ->
+        _ ->
             CustomColors.grey
 
 
@@ -212,23 +212,13 @@ bombsText =
         ]
 
 
-lost : Bool -> Html.Attribute msg
-lost exploded =
-    case exploded of
-        False ->
-            style
-                [ ( "font-size", "20px" )
-                , ( "text-align", "center" )
-                , ( "color", CustomColors.brown )
-                , ( "visibility", "hidden" )
-                ]
-
-        True ->
-            style
-                [ ( "font-size", "20px" )
-                , ( "text-align", "center" )
-                , ( "color", CustomColors.brown )
-                ]
+state : Html.Attribute msg
+state =
+    style
+        [ ( "font-size", "20px" )
+        , ( "text-align", "center" )
+        , ( "color", CustomColors.brown )
+        ]
 
 
 helpTitle : Html.Attribute msg

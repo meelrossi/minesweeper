@@ -14,8 +14,7 @@ view : Model -> Html Msg
 view model =
     div [ Style.levelTitle ]
         [ text "Easy"
-        , p [ Style.lost model.exploded ] [ text "PERDISTE :(" ]
-        , p [ Style.lost model.success ] [ text "HAS GANADO" ]
+        , p [ Style.state ] []
         , Minefield.getHTMLMinefield model
         , div []
             [ a [ Style.levelLink, href menuPath ]

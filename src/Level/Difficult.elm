@@ -14,8 +14,7 @@ view : Model -> Html Msg
 view model =
     div [ Style.levelTitle ]
         [ text "Difficult"
-        , p [ Style.lost model.exploded ] [ text "PERDISTE :(" ]
-        , p [ Style.lost model.success ] [ text "HAS GANADO" ]
+        , p [ Style.state ] []
         , Minefield.getHTMLMinefield model
         , div []
             [ a [ Style.levelLink, href menuPath ]
@@ -25,3 +24,16 @@ view model =
                 [ text "Refresh" ]
             ]
         ]
+
+
+getText : Model -> Html Msg
+getText model =
+    case model.current of
+        Game _ Win ->
+            text "Felicitaciones! Has Ganado. :)"
+
+        Game _ Lose ->
+            text "Oops has perdido :("
+
+        _ ->
+            text ""

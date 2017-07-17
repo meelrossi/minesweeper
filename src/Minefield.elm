@@ -34,12 +34,12 @@ checkRowSuccess rows =
 
         xs :: rest ->
             case xs.tp of
-                Number ->
-                    case xs.opened of
-                        True ->
+                Number n ->
+                    case xs.state of
+                        Opened ->
                             checkRowSuccess rest
 
-                        False ->
+                        _ ->
                             False
 
                 Bomb ->
@@ -73,9 +73,9 @@ new width height bombs seed0 =
                 width
                 (\location ->
                     if List.member location positions then
-                        Tile Bomb 9 False location False
+                        Tile Bomb Closed location
                     else
-                        Tile Number (List.foldr (+) 0 (List.map (\x -> x positions) (List.map isMine (getNeighbors location)))) False location False
+                        Tile (Number (List.foldr (+) 0 (List.map (\x -> x positions) (List.map isMine (getNeighbors location))))) Closed location
                 )
     in
         ( { field = matrix, bombs = bombs, marks = 0, width = width, height = height }, seed )
@@ -116,31 +116,38 @@ isMine ( x, y ) positions =
 
 getHTMLMinefield : Model -> Html Msg
 getHTMLMinefield model =
-    let
-        minefield =
-            model.minefield
+    case model.current of
+        Game minefield _ ->
+            let
+                success =
+                    case model.current of
+                        Game _ Win ->
+                            True
 
-        success =
-            model.success
-    in
-        div [ Style.minefield ]
-            [ p [ Style.bombsText ] [ text (String.concat [ toString (minefield.marks), "/", toString (minefield.bombs) ]), img [ Style.bombImage, src "src/resources/bomb.png" ] [] ]
-            , div []
-                [ table []
-                    (List.map
-                        (\row ->
-                            tr []
-                                (List.map
-                                    (\column ->
-                                        td [ (Style.tile column), onClick (Msgs.OpenTile column), onRightClick (Msgs.MarkTile column) ] (getColumnTile column success)
-                                    )
-                                    row
+                        _ ->
+                            False
+            in
+                div [ Style.minefield ]
+                    [ p [ Style.bombsText ] [ text (String.concat [ toString (minefield.marks), "/", toString (minefield.bombs) ]), img [ Style.bombImage, src "src/resources/bomb.png" ] [] ]
+                    , div []
+                        [ table []
+                            (List.map
+                                (\row ->
+                                    tr []
+                                        (List.map
+                                            (\column ->
+                                                td [ (Style.tile column), onClick (Msgs.OpenTile column), onRightClick (Msgs.MarkTile column) ] (getColumnTile column success)
+                                            )
+                                            row
+                                        )
                                 )
-                        )
-                        (Matrix.toList minefield.field)
-                    )
-                ]
-            ]
+                                (Matrix.toList minefield.field)
+                            )
+                        ]
+                    ]
+
+        Menu ->
+            div [] []
 
 
 getItem : Int -> Bool -> Html Msg
@@ -163,17 +170,24 @@ getItem n success =
 
 getColumnTile : Tile -> Bool -> List (Html Msg)
 getColumnTile tile success =
-    case tile.opened of
-        True ->
-            [ b [] [ p [ Style.number tile.value ] [ getItem tile.value success ] ] ]
+    case tile.state of
+        Opened ->
+            let
+                value =
+                    case tile.tp of
+                        Number n ->
+                            n
 
-        False ->
-            case tile.marked of
-                True ->
-                    [ b [] [ p [ Style.tileImage ] [ img [ Style.flagImage, src "src/resources/flag.png" ] [] ] ] ]
+                        Bomb ->
+                            9
+            in
+                [ b [] [ p [ Style.number value ] [ getItem value success ] ] ]
 
-                False ->
-                    []
+        Marked ->
+            [ b [] [ p [ Style.tileImage ] [ img [ Style.flagImage, src "src/resources/flag.png" ] [] ] ] ]
+
+        Closed ->
+            []
 
 
 getNeighbors : Location -> List Location
@@ -198,18 +212,28 @@ checkAndOpenNeighbors minefield tile =
                         in
                             case tile of
                                 Just tile ->
-                                    if tile.marked then
-                                        1
-                                    else
-                                        0
+                                    case tile.state of
+                                        Marked ->
+                                            1
+
+                                        _ ->
+                                            0
 
                                 Nothing ->
                                     0
                     )
                     neighbors
                 )
+
+        tileValue =
+            case tile.tp of
+                Number n ->
+                    n
+
+                Bomb ->
+                    0
     in
-        case markedNeighbors == tile.value of
+        case markedNeighbors == tileValue of
             True ->
                 openNeighbors minefield neighbors
 
@@ -230,36 +254,34 @@ openNeighbors field neig =
             in
                 case tile of
                     Just tile ->
-                        case tile.marked || tile.opened of
-                            True ->
-                                openNeighbors field rest
-
-                            False ->
+                        case tile.state of
+                            Closed ->
                                 case tile.tp of
                                     Bomb ->
-                                        ( Matrix.map (\tile -> { tile | opened = True }) field, True )
+                                        ( Matrix.map (\tile -> { tile | state = Opened }) field, True )
 
-                                    Number ->
-                                        case tile.value of
-                                            0 ->
-                                                let
-                                                    openTile =
-                                                        { tile | opened = True, marked = False }
+                                    Number 0 ->
+                                        let
+                                            openTile =
+                                                { tile | state = Opened }
 
-                                                    newField =
-                                                        Matrix.set tile.location openTile field
-                                                in
-                                                    openNeighbors newField (List.append rest (getNeighbors tile.location))
+                                            newField =
+                                                Matrix.set tile.location openTile field
+                                        in
+                                            openNeighbors newField (List.append rest (getNeighbors tile.location))
 
-                                            _ ->
-                                                let
-                                                    openTile =
-                                                        Debug.log "dasdad " { tile | opened = True, marked = False }
+                                    Number _ ->
+                                        let
+                                            openTile =
+                                                { tile | state = Opened }
 
-                                                    newField =
-                                                        Matrix.set tile.location openTile field
-                                                in
-                                                    openNeighbors newField rest
+                                            newField =
+                                                Matrix.set tile.location openTile field
+                                        in
+                                            openNeighbors newField rest
+
+                            _ ->
+                                openNeighbors field rest
 
                     Nothing ->
                         openNeighbors field rest
@@ -281,21 +303,21 @@ clearNeighbors field tiles =
                         clearNeighbors field rest
 
                     Just tile ->
-                        case tile.opened || tile.marked of
-                            True ->
-                                clearNeighbors field rest
-
-                            False ->
+                        case tile.state of
+                            Closed ->
                                 let
                                     openedTile =
-                                        { tile | opened = True, marked = False }
+                                        { tile | state = Opened }
 
                                     newField =
                                         Matrix.set loc openedTile field
                                 in
-                                    case tile.value of
-                                        0 ->
+                                    case tile.tp of
+                                        Number 0 ->
                                             clearNeighbors newField (List.append rest (getNeighbors loc))
 
                                         _ ->
                                             clearNeighbors newField rest
+
+                            _ ->
+                                clearNeighbors field rest

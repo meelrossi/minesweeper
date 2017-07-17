@@ -2,10 +2,23 @@ var _user$project$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
 var _user$project$Main$initialModel = function (route) {
-	var _p0 = _user$project$Minefield$getMinefield(route);
-	var minefield = _p0._0;
-	var seed = _p0._1;
-	return {route: route, minefield: minefield, seed: seed, exploded: false, success: false};
+	var _p0 = route;
+	if (_p0.ctor === 'MenuRoute') {
+		return {
+			route: route,
+			current: _user$project$Models$Menu,
+			seed: _mgold$elm_random_pcg$Random_Pcg$initialSeed(0)
+		};
+	} else {
+		var _p1 = _user$project$Minefield$getMinefield(route);
+		var minefield = _p1._0;
+		var seed = _p1._1;
+		return {
+			route: route,
+			current: A2(_user$project$Models$Game, minefield, _user$project$Models$Playing),
+			seed: seed
+		};
+	}
 };
 var _user$project$Main$init = function (location) {
 	var currentRoute = _user$project$Routing$parseLocation(location);

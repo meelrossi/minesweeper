@@ -6,10 +6,8 @@ import Random.Pcg exposing (Seed)
 
 type alias Model =
     { route : Route
-    , minefield : Minefield
+    , current : CurrentState
     , seed : Seed
-    , exploded : Bool
-    , success : Bool
     }
 
 
@@ -24,16 +22,31 @@ type alias Minefield =
 
 type alias Tile =
     { tp : TileType
-    , value : Int
-    , opened : Bool
+    , state : TileState
     , location : Location
-    , marked : Bool
     }
 
 
+type CurrentState
+    = Game Minefield GameState
+    | Menu
+
+
+type GameState
+    = Win
+    | Lose
+    | Playing
+
+
 type TileType
-    = Number
+    = Number Int
     | Bomb
+
+
+type TileState
+    = Opened
+    | Closed
+    | Marked
 
 
 type Route
